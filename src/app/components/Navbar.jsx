@@ -36,7 +36,7 @@ export default function Navbar() {
             <Palette className="w-7 h-7 text-[#9333ea]" strokeWidth={2.5} />
             <span className="font-bold text-xl tracking-tight flex">
               <span className="text-[#a78bfa]">Art</span>
-              <span className="bg-gradient-to-r from-[#c084fc] to-[#f472b6] bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-[#c084fc] to-[#f472b6] bg-clip-text text-transparent">
                 Hub
               </span>
             </span>
