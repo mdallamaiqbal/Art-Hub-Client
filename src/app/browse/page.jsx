@@ -4,6 +4,7 @@ const  BrowseArtworksPage = () => {
     return (
         <div>
             Browse Artworks
+            
         </div>
     );
 };
