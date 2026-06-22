@@ -7,13 +7,11 @@ import { Button, TextField, Label, FieldError, Card, CardHeader } from "@heroui/
 import { Eye, EyeSlash } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client"; 
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const router = useRouter();
   
   // Form States
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
   const [password, setPassword] = useState("");
   
   // Validation State
@@ -24,48 +22,43 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
-  // Missing validation variables derived from state
-  const isNameInvalid = wasSubmitted && !name.trim();
+  // Validation variables derived from state
   const isEmailInvalid = wasSubmitted && !email.trim();
   const isPasswordInvalid = wasSubmitted && password.length < 6;
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const handleSignup = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setWasSubmitted(true); 
     
     setStatus({ type: "", message: "" });
 
-    if (!name.trim() || !email.trim() || !password ) {
+    if (!email.trim() || !password) {
       setStatus({ type: "danger", message: "Please fill in all required fields." });
       return;
     }
     setIsLoading(true);
 
     try {
-      const { data, error } = await authClient.signUp.email({
+      const { data, error } = await authClient.signIn.email({
         email: email,
         password: password,
-        name: name,
-        image: photoUrl || undefined, 
         callbackURL: "/", 
       });
 
       if (error) {
-        setStatus({ type: "danger", message: error.message || "Something went wrong." });
+        setStatus({ type: "danger", message: error.message || "Invalid credentials." });
       } else {
         setStatus({
           type: "success",
-          message: "Account created successfully! Redirecting..."
+          message: "Logged in successfully! Redirecting..."
         });
         setTimeout(() => {
           router.push("/");
         }, 1500);
-        setName("");
         setEmail("");
         setPassword("");  
-        setPhotoUrl("");
         setWasSubmitted(false);
       }
     } catch (err) {
@@ -80,27 +73,14 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md p-6 shadow-xl border border-default-200">
         <CardHeader className="flex flex-col items-center gap-1 pb-6 pt-0 px-0">
           <h1 className="text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-[#9333ea] to-[#db2777]">
-            Create an account
+            Welcome Back
           </h1>
-          <p className="text-small text-default-500">Enter your details below to get started</p>
+          <p className="text-small text-default-500">Enter your credentials to access your account</p>
         </CardHeader>
         
         <div className="flex flex-col gap-4">
-          <form onSubmit={handleSignup} className="flex flex-col gap-4" noValidate>
+          <form onSubmit={handleLogin} className="flex flex-col gap-4" noValidate>
             
-            {/* Name Input */}
-            <TextField isRequired isInvalid={isNameInvalid} className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-default-700">Name</Label>
-              <input 
-                type="text"
-                placeholder="Enter your Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
-              />
-              <FieldError>Name is required</FieldError>
-            </TextField>
-
             {/* Email Input */}
             <TextField isRequired isInvalid={isEmailInvalid} className="flex flex-col gap-1.5">
               <Label className="text-sm font-medium text-default-700">Email</Label>
@@ -112,18 +92,6 @@ export default function RegisterPage() {
                 className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
               />
               <FieldError>Please enter a valid email address</FieldError>
-            </TextField>
-
-            {/* Photo URL Input */}
-            <TextField className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-default-700">Photo URL</Label>
-              <input 
-                type="url"
-                placeholder="https://example.com/avatar.jpg (Optional)"
-                value={photoUrl}
-                onChange={(e) => setPhotoUrl(e.target.value)}
-                className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
-              />
             </TextField>
 
             {/* Password Input */}
@@ -169,16 +137,16 @@ export default function RegisterPage() {
               isLoading={isLoading}
               className="w-full mt-2 text-white font-semibold bg-linear-to-r from-[#9333ea] to-[#db2777] shadow-md hover:opacity-90 transition-opacity"
             >
-             Register
+              Login
             </Button>
           </form>
 
           {/* Navigation Links */}
           <div className="flex flex-col items-center justify-center gap-3 mt-3">
             <p className="text-small text-default-500">
-              Already have an account?{" "}
-              <Link href="/auth/login" className="text-[#db2777] hover:underline font-semibold">
-               Login
+              Don't have an account?{" "}
+              <Link href="/auth/register" className="text-[#db2777] hover:underline font-semibold">
+                Register
               </Link>
             </p>
           </div>

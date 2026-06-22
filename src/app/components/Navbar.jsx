@@ -66,13 +66,11 @@ export default function Navbar() {
         {/* Right Side: Authentication */}
         <div className="flex items-center">
           <Button
-            as={Link}
-            href="/login"
             variant="flat"
             size="sm"
             className="bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 font-medium rounded-lg"
           >
-            Login
+           <Link href="/auth/login">Login</Link>
           </Button>
         </div>
       </header>

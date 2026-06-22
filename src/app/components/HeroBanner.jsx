@@ -28,9 +28,7 @@ export default function HeroBanner() {
           <div className="pt-2">
             <Link
               href="/browse"
-              className="bg-linear-to-r py-2.5  from-[#9333ea] to-[#db2777] 
-              text-white font-semibold shadow-lg shadow-purple-900/30 hover:opacity-95 transition-opacity rounded-xl px-8"
-            >
+              className={"bg-linear-to-r py-2.5  from-[#9333ea] to-[#db2777] text-white font-semibold shadow-lg shadow-purple-900/30 hover:opacity-95 transition-opacity rounded-xl px-8"}>
               Explore Artworks
             </Link>
           </div>
@@ -56,16 +54,16 @@ export default function HeroBanner() {
         </div>
 
         {/* Info Footer Block */}
-        <div className="flex items-center justify-center gap-8 text-xs text-zinc-500 pt-2 border-t border-zinc-900/60 max-w-xl mx-auto w-full">
+        {/* <div className="flex items-center justify-center gap-8 text-xs text-zinc-500 pt-2 border-t border-zinc-900/60 max-w-xl mx-auto w-full">
           <div className="flex items-center gap-1.5">
-            <ShieldCheck width="16" height="16" className="text-[#c084fc]" />
+            <ShieldCheck width={16} height={16} className="text-[#c084fc]" />
             <span>Secure Transactions</span>
           </div>
           <div className="w-1.5 h-1.5 rounded-full bg-zinc-800" />
           <div>
             <span className="text-zinc-300 font-semibold">20k+</span> Masterpieces Listed
           </div>
-        </div>
+        </div> */}
 
       </div>
     </section>
