@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-
+import { motion } from "motion/react"
 import { Sparkles, ShieldCheck } from "@gravity-ui/icons";
 
 export default function HeroBanner() {
@@ -11,10 +11,10 @@ export default function HeroBanner() {
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-pink-600/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="mx-auto max-w-7xl px-6 flex flex-col gap-16 relative z-10">  
         <div className="space-y-6 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-medium">
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-medium">
             <Sparkles width="14" height="14" className="text-[#c084fc]" />
-            <span>The Next-Gen Digital Art Ecosystem</span>
-          </div>         
+            <span >The Next-Gen Digital Art Ecosystem</span>
+          </motion.div>         
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.15]">
             Discover, Collect & Sell{" "}
             <span className="bg-linear-to-r from-[#a78bfa] via-[#c084fc] to-[#f472b6] bg-clip-text text-transparent">

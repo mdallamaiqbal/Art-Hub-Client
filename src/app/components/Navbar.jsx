@@ -9,21 +9,21 @@ import Image from "next/image";
 import avatar from '../../../public/assets/avatar.jpeg'
 
 export default function Navbar() {
-    const router = useRouter();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const {data:session} = useSession();
+  const { data: session, isPending } = useSession();
 
   const user = session?.user
   const pathname = usePathname(); // Get the current active URL path
-  
-  const handleSignout = async()=>{
+
+  const handleSignout = async () => {
     await signOut({
-  fetchOptions: {
-    onSuccess: () => {
-      router.push("/auth/login"); // redirect to login page
-    },
-  },
-})
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/auth/login"); // redirect to login page
+        },
+      },
+    })
   }
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -37,7 +37,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-40 w-full border-b border-zinc-800 bg-[#0f111a]/70 backdrop-blur-lg text-white">
       {/* Header Container */}
       <header className="flex h-16 items-center justify-between px-6 max-w-7xl mx-auto">
-        
+
         {/* Left Side: Mobile Toggle & Logo */}
         <div className="flex items-center gap-4">
           <button
@@ -68,11 +68,10 @@ export default function Navbar() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`transition-colors font-medium text-sm ${
-                  isActive 
+                className={`transition-colors font-medium text-sm ${isActive
                     ? "text-[#c084fc] font-semibold" // Active color matching logo gradient
                     : "text-zinc-400 hover:text-white" // Inactive state
-                }`}
+                  }`}
               >
                 {item.label}
               </Link>
@@ -81,19 +80,36 @@ export default function Navbar() {
         </div>
 
         {/* Right Side: Authentication */}
-        <div className="flex items-center">
-         {user? <>
-                <h3>Hi! {user.name}</h3>
-                <Image width={35} height={35} className="rounded-3xl mx-2" src={user?.image || avatar} alt="avatar" />
-                <Button onClick={handleSignout} variant="flat"  className="bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 font-medium rounded-lg">Logout</Button>
-         </>
-         : <Button
-            variant="flat"
-            size="sm"
-            className="bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 font-medium rounded-lg"
-          >
-           <Link href="/auth/login">Login</Link>
-          </Button>}
+        <div className="flex items-center justify-end">
+          {isPending ? (
+            <div className="w-8 h-8 rounded-full bg-zinc-800 animate-pulse" />
+          ) : user ? (
+            <>
+              <h3 className="text-sm font-medium">Hi! {user.name}</h3>
+              <Image
+                width={35}
+                height={35}
+                className="rounded-3xl mx-2 object-cover"
+                src={user?.image || avatar}
+                alt="avatar"
+              />
+              <Button
+                onClick={handleSignout}
+                variant="flat"
+                className="bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 font-medium rounded-lg"
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="flat"
+              size="sm"
+              className="bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 font-medium rounded-lg"
+            >
+              <Link href="/auth/login" className="text-purple-300">Login</Link>
+            </Button>
+          )}
         </div>
       </header>
 
@@ -106,11 +122,10 @@ export default function Navbar() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`text-lg py-2 block w-full transition-colors ${
-                  isActive 
-                    ? "text-[#c084fc] font-semibold" 
+                className={`text-lg py-2 block w-full transition-colors ${isActive
+                    ? "text-[#c084fc] font-semibold"
                     : "text-zinc-400 hover:text-white"
-                }`}
+                  }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}
