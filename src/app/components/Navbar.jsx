@@ -1,13 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Link, Button } from "@heroui/react";
 import { Palette, Menu, X } from "lucide-react";
+import { signOut, useSession } from "@/lib/auth-client";
+import Image from "next/image";
+import avatar from '../../../public/assets/avatar.jpeg'
 
 export default function Navbar() {
+    const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const {data:session} = useSession();
+
+  const user = session?.user
   const pathname = usePathname(); // Get the current active URL path
+  
+  const handleSignout = async()=>{
+    await signOut({
+  fetchOptions: {
+    onSuccess: () => {
+      router.push("/auth/login"); // redirect to login page
+    },
+  },
+})
+  }
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -65,13 +82,18 @@ export default function Navbar() {
 
         {/* Right Side: Authentication */}
         <div className="flex items-center">
-          <Button
+         {user? <>
+                <h3>Hi! {user.name}</h3>
+                <Image width={35} height={35} className="rounded-3xl mx-2" src={user?.image || avatar} alt="avatar" />
+                <Button onClick={handleSignout} variant="flat"  className="bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 font-medium rounded-lg">Logout</Button>
+         </>
+         : <Button
             variant="flat"
             size="sm"
             className="bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 font-medium rounded-lg"
           >
            <Link href="/auth/login">Login</Link>
-          </Button>
+          </Button>}
         </div>
       </header>
 

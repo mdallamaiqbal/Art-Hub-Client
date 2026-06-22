@@ -1,7 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
-  reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+        pathname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+        pathname: '**',
+      },
+    ],
+  },
 };
 
+// module.exports er poriborte eti use korun:
 export default nextConfig;
