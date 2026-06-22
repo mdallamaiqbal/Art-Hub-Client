@@ -92,6 +92,7 @@ export default function Navbar() {
                 className="rounded-3xl mx-2 object-cover"
                 src={user?.image || avatar}
                 alt="avatar"
+                priority
               />
               <Button
                 onClick={handleSignout}

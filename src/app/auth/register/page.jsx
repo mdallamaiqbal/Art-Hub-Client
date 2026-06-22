@@ -4,18 +4,20 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, TextField, Label, FieldError, Card, CardHeader } from "@heroui/react";
+import { Description, Radio, RadioGroup } from "@heroui/react";
 import { Eye, EyeSlash } from "@gravity-ui/icons";
-import { authClient } from "@/lib/auth-client"; 
+import { authClient } from "@/lib/auth-client";
 
 export default function RegisterPage() {
   const router = useRouter();
-  
+
   // Form States
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [password, setPassword] = useState("");
-  
+  const [role, setRole] = useState("user")
+
   // Validation State
   const [wasSubmitted, setWasSubmitted] = useState(false);
 
@@ -33,11 +35,11 @@ export default function RegisterPage() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setWasSubmitted(true); 
-    
+    setWasSubmitted(true);
+
     setStatus({ type: "", message: "" });
 
-    if (!name.trim() || !email.trim() || !password ) {
+    if (!name.trim() || !email.trim() || !password) {
       setStatus({ type: "danger", message: "Please fill in all required fields." });
       return;
     }
@@ -48,8 +50,9 @@ export default function RegisterPage() {
         email: email,
         password: password,
         name: name,
-        image: photoUrl || undefined, 
-        callbackURL: "/", 
+        image: photoUrl || undefined,
+        role: role,
+        callbackURL: "/",
       });
 
       if (error) {
@@ -64,12 +67,12 @@ export default function RegisterPage() {
         }, 1500);
         setName("");
         setEmail("");
-        setPassword("");  
+        setPassword("");
         setPhotoUrl("");
         setWasSubmitted(false);
       }
     } catch (err) {
-        setStatus({ type: "danger", message: "An unexpected error occurred." });
+      setStatus({ type: "danger", message: "An unexpected error occurred." });
     } finally {
       setIsLoading(false);
     }
@@ -84,14 +87,14 @@ export default function RegisterPage() {
           </h1>
           <p className="text-small text-default-500">Enter your details below to get started</p>
         </CardHeader>
-        
+
         <div className="flex flex-col gap-4">
           <form onSubmit={handleSignup} className="flex flex-col gap-4" noValidate>
-            
+
             {/* Name Input */}
             <TextField isRequired isInvalid={isNameInvalid} className="flex flex-col gap-1.5">
               <Label className="text-sm font-medium text-default-700">Name</Label>
-              <input 
+              <input
                 type="text"
                 placeholder="Enter your Name"
                 value={name}
@@ -104,7 +107,7 @@ export default function RegisterPage() {
             {/* Email Input */}
             <TextField isRequired isInvalid={isEmailInvalid} className="flex flex-col gap-1.5">
               <Label className="text-sm font-medium text-default-700">Email</Label>
-              <input 
+              <input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
@@ -117,7 +120,7 @@ export default function RegisterPage() {
             {/* Photo URL Input */}
             <TextField className="flex flex-col gap-1.5">
               <Label className="text-sm font-medium text-default-700">Photo URL</Label>
-              <input 
+              <input
                 type="url"
                 placeholder="https://example.com/avatar.jpg (Optional)"
                 value={photoUrl}
@@ -130,16 +133,16 @@ export default function RegisterPage() {
             <TextField isRequired isInvalid={isPasswordInvalid} className="flex flex-col gap-1.5">
               <Label className="text-sm font-medium text-default-700">Password</Label>
               <div className="relative flex items-center">
-                <input 
+                <input
                   type={isVisible ? "text" : "password"}
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 pr-10 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
                 />
-                <button 
-                  className="absolute right-3 focus:outline-none text-default-400 hover:text-default-600 transition-colors" 
-                  type="button" 
+                <button
+                  className="absolute right-3 focus:outline-none text-default-400 hover:text-default-600 transition-colors"
+                  type="button"
                   onClick={toggleVisibility}
                 >
                   {isVisible ? <EyeSlash className="text-xl" /> : <Eye className="text-xl" />}
@@ -147,14 +150,34 @@ export default function RegisterPage() {
               </div>
               <FieldError>Password must be at least 6 characters</FieldError>
             </TextField>
-
+            {/* Role */}
+            <div className="flex flex-col gap-4">
+              <Label>Select Your Role</Label>
+              <RadioGroup aria-label="Select Your Role" defaultValue="user" name="role" orientation="horizontal" onChange={value=>setRole(value)}>
+                <Radio value="user">
+                  <Radio.Content>
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    User
+                  </Radio.Content>
+                </Radio>
+                <Radio value="artist">
+                  <Radio.Content>
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    Artist
+                  </Radio.Content>
+                </Radio>
+              </RadioGroup>
+            </div>
             {status.message && (
               <div
-                className={`p-3.5 rounded-xl border text-sm flex flex-col gap-0.5 shadow-sm transition-all ${
-                  status.type === "danger"
+                className={`p-3.5 rounded-xl border text-sm flex flex-col gap-0.5 shadow-sm transition-all ${status.type === "danger"
                     ? "bg-red-50 border-red-200 text-red-900 dark:bg-red-950/40 dark:border-red-900/60 dark:text-red-200"
                     : "bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-950/40 dark:border-emerald-900/60 dark:text-emerald-200"
-                }`}
+                  }`}
               >
                 <span className="font-bold tracking-wide">
                   {status.type === "danger" ? "Error" : "Success"}
@@ -164,12 +187,12 @@ export default function RegisterPage() {
             )}
 
             {/* Submit Button */}
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               isLoading={isLoading}
               className="w-full mt-2 text-white font-semibold bg-linear-to-r from-[#9333ea] to-[#db2777] shadow-md hover:opacity-90 transition-opacity"
             >
-             Register
+              Register
             </Button>
           </form>
 
@@ -178,7 +201,7 @@ export default function RegisterPage() {
             <p className="text-small text-default-500">
               Already have an account?{" "}
               <Link href="/auth/login" className="text-[#db2777] hover:underline font-semibold">
-               Login
+                Login
               </Link>
             </p>
           </div>
