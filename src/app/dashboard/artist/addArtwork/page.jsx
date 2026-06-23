@@ -17,6 +17,8 @@ import {
 
 // Gravity UI Icons
 import { TrashBin, CloudArrowUpIn, Heading, CircleDollar, Layers, FileText } from "@gravity-ui/icons";
+import { createArt } from "@/lib/actions/arts";
+import { redirect } from "next/navigation";
 
 export default function ArtSubmissionForm() {
     // Form States
@@ -43,7 +45,6 @@ export default function ArtSubmissionForm() {
         if (file) {
             setImageFile(file);
             setImagePreview(URL.createObjectURL(file));
-            // ইমেজ সিলেক্ট করলে এরর রিমুভ হবে
             if (hasSubmitted) {
                 setErrors(prev => ({ ...prev, image: false }));
             }
@@ -121,8 +122,12 @@ export default function ArtSubmissionForm() {
             imageUrl: finalImageUrl,
         };
 
-        console.log("Submitted Art Work Data:", artData);
-        alert("Art piece submitted successfully!");
+        const res = await createArt(artData);
+        if(res.insertedId){
+          alert("Art piece submitted successfully!");
+          redirect('/dashboard/artist')
+        }
+       
         handleReset();
     };
 
@@ -330,7 +335,7 @@ export default function ArtSubmissionForm() {
                                 <span className="text-purple-500">Uploading Art...</span>
                             ) : (
                                 <span className="bg-linear-to-r from-[#a78bfa] via-[#c084fc] to-[#f472b6] bg-clip-text text-transparent">
-                                    Publish Artwork
+                                    Upload Artwork
                                 </span>
                             )}
                         </Button>
