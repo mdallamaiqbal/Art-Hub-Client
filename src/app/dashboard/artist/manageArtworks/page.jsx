@@ -1,14 +1,17 @@
 import { getArts } from '@/lib/api/arts';
 import React from 'react';
 import { Table } from "@heroui/react";
-import { Pencil, Trash2 } from 'lucide-react'; 
+import ArtActions from '@/app/components/dashboard/ArtActions';
+
 
 const manageArtworksPage = async () => {
     const manageArtwork = await getArts();
 
     return (
-        <div className="p-4 md:p-6  min-h-screen text-white w-full max-w-7xl mx-auto">
-            <h2 className="text-xl font-bold mb-6 text-gray-200">Manage Artworks ({manageArtwork?.length || 0})</h2>
+        <div className="p-4 md:p-6 min-h-screen text-white w-full max-w-7xl mx-auto">
+            <h2 className="text-xl font-bold mb-6 text-gray-200">
+                Manage Artworks ({manageArtwork?.length || 0})
+            </h2>
             
             <div className="w-full rounded-xl border border-gray-800/80 bg-[#16161a]">
                 <Table className="dark w-full table-fixed"> 
@@ -66,15 +69,9 @@ const manageArtworksPage = async () => {
                                             </span>
                                         </Table.Cell>
                                         
+                                       
                                         <Table.Cell>
-                                            <div className="flex items-center gap-2 md:gap-4">
-                                                <button className="text-amber-500 hover:text-amber-400 p-1 hover:bg-amber-500/10 rounded transition">
-                                                    <Pencil className="w-4 h-4 md:w-5 md:h-5" />
-                                                </button>
-                                                <button className="text-red-500 hover:text-red-400 p-1 hover:bg-red-500/10 rounded transition">
-                                                    <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
-                                                </button>
-                                            </div>
+                                            <ArtActions artId={art._id} />
                                         </Table.Cell>
                                         
                                     </Table.Row>

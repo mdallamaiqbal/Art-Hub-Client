@@ -11,3 +11,10 @@ export const createArt = async(newArtData)=>{
     });
     return res.json()
 }
+
+export const getArtById = async (id) => {
+    const res = await fetch(`${baseUrl}/api/arts/${id}`, {
+        method: 'GET'
+    });
+    return res.json();
+};
