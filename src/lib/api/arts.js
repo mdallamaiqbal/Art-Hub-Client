@@ -1,8 +1,14 @@
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-export const getArts = async()=>{
+export const getAllArts = async()=>{
     const res = await fetch(`${baseUrl}/api/all-arts`);
+    return res.json()
+}
+export const getArtistArts = async(email)=>{
+    const res = await fetch(`${baseUrl}/api/my-arts?email=${email}`, {
+        cache: 'no-store'
+    });
     return res.json()
 }
 

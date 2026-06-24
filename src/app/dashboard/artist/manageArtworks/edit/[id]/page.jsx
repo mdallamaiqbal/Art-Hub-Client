@@ -235,7 +235,7 @@ export default function EditArtArtworkForm() {
                         <Button type="button" variant="flat" color="default" onClick={() => router.push('/dashboard/artist')}>
                             Cancel
                         </Button>
-                        <Button type="submit" isLoading={isSubmitting} className="font-bold border border-purple-200 px-6">
+                        <Button type="submit" isLoading={isSubmitting} className="font-bold bg-linear-to-r from-[#a78bfa] via-[#c084fc] to-[#f472b6] bg-clip-text text-transparent px-6">
                             {isSubmitting ? "Updating..." : "Update Artwork"}
                         </Button>
                     </Fieldset.Actions>

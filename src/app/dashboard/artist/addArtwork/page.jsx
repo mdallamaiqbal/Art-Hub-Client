@@ -19,8 +19,10 @@ import {
 import { TrashBin, CloudArrowUpIn, Heading, CircleDollar, Layers, FileText } from "@gravity-ui/icons";
 import { createArt } from "@/lib/actions/arts";
 import { redirect } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
 
 export default function ArtSubmissionForm() {
+    const { data: session } = useSession();
     // Form States
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -83,6 +85,10 @@ export default function ArtSubmissionForm() {
         if (!validateForm()) {
             return;
         }
+        if (!session?.user?.email) {
+            alert("You must be logged in to upload artwork!");
+            return;
+        }
 
         setIsSubmitting(true);
         let finalImageUrl = uploadedUrl;
@@ -120,12 +126,13 @@ export default function ArtSubmissionForm() {
             price: parseFloat(price),
             category,
             imageUrl: finalImageUrl,
+            artistEmail: session.user.email
         };
 
         const res = await createArt(artData);
         if(res.insertedId){
           alert("Art piece submitted successfully!");
-          redirect('/dashboard/artist')
+          redirect('/dashboard/artist/manageArtworks')
         }
        
         handleReset();
