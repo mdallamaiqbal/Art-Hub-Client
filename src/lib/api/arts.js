@@ -1,15 +1,18 @@
+import { serverFetch } from "../core/server";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getAllArts = async()=>{
-    const res = await fetch(`${baseUrl}/api/all-arts`);
-    return res.json()
+     return serverFetch(`/api/all-arts`)
+    // const res = await fetch(`${baseUrl}/api/all-arts`);
+    // return res.json()
 }
-export const getArtistArts = async(email)=>{
-    const res = await fetch(`${baseUrl}/api/my-arts?email=${email}`, {
-        cache: 'no-store'
-    });
-    return res.json()
+export const getArtistArts = async(artistId)=>{
+    return serverFetch(`/api/my-arts?artistId=${artistId}`)
+    // const res = await fetch(`${baseUrl}/api/my-arts?artistId=${artistId}`, {
+    //     cache: 'no-store'
+    // });
+    // return res.json()
 }
 
 export const deleteArt = async (id) => {

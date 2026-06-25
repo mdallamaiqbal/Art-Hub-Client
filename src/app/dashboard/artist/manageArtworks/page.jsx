@@ -2,18 +2,20 @@ import { auth } from "@/lib/auth";
 import React from 'react';
 import { Table } from "@heroui/react";
 import ArtActions from '@/app/components/dashboard/ArtActions';
-import { getArtistArts } from '@/lib/api/arts';
-import { headers } from 'next/headers';
 import Link from "next/link";
+import { getArtistArts } from "@/lib/api/arts";
+import { getUserSession } from "@/lib/core/session";
 
 
 const manageArtworksPage = async () => {
-    const session = await auth.api.getSession({
-        headers: await headers()
-    });
-    
-    const userEmail = session?.user?.email;
-    const manageArtwork = userEmail ? await getArtistArts(userEmail) : [];
+    const user = await getUserSession();
+    const artistId = user?.id || user?._id; 
+    let manageArtwork = artistId ? await getArtistArts(artistId) : [];
+
+    if (!Array.isArray(manageArtwork)) {
+        console.error("API did not return an array:", manageArtwork);
+        manageArtwork = [];
+    }
 
     return (
       <div className="p-4 md:p-6 min-h-screen text-white w-full max-w-7xl mx-auto">

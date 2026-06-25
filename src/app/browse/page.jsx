@@ -1,6 +1,7 @@
 import React from 'react';
 
-const  BrowseArtworksPage = () => {
+const  BrowseArtworksPage =async () => {
+      
     return (
         <div>
             Browse Artworks
