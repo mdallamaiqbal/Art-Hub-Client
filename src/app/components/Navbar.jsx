@@ -2,11 +2,12 @@
 
 import React, { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Link, Button } from "@heroui/react";
+import {  Button } from "@heroui/react";
 import { Palette, Menu, X } from "lucide-react";
 import { signOut, useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import avatar from '../../../public/assets/avatar.jpeg'
+import Link from "next/link";
 
 export default function Navbar() {
   const router = useRouter();
