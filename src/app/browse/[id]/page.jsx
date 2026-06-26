@@ -1,10 +1,23 @@
+import CommentSection from '@/app/components/commentSection';
 import { getArtId } from '@/lib/api/arts';
+import { getUserSession } from '@/lib/core/session';
 import React from 'react';
 
 const ArtDetailPage = async ({ params }) => {
     const { id } = await params;
-    const art = await getArtId(id);
+  
+   
+    const [art, userSession] = await Promise.all([
+        getArtId(id),
+        getUserSession()
+    ]);
 
+    const currentUser = userSession ? {
+        email: userSession.email,
+        name: userSession.name,
+        image: userSession.image || userSession.avatar || "",
+        artistId: userSession.artistId || userSession.id || userSession._id 
+    } : null;
     // Guard clause if art data is not found
     if (!art) {
         return (
@@ -85,38 +98,11 @@ const ArtDetailPage = async ({ params }) => {
                     </div>
                 </div>
 
-                {/* Comment Section (Placed Under the Card) */}
-                <div className="mt-8 border border-gray-800 bg-[#16161a] rounded-2xl p-6 md:p-8 shadow-2xl">
-                    <h3 className="text-lg font-bold text-gray-100 mb-4 flex items-center gap-2">
-                        💬 Discussion & Feedback
-                    </h3>
-                    
-                    {/* User Comment Input Field */}
-                    <form className="space-y-4">
-                        <div>
-                            <textarea 
-                                rows="4" 
-                                className="w-full bg-[#111115] border border-gray-800 rounded-xl p-4 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-purple-500/50 transition duration-200 resize-none"
-                                placeholder="What do you think about this piece? Share your thoughts..."
-                            />
-                        </div>
-                        <div className="flex justify-end">
-                            <button 
-                                type="submit" 
-                                className="bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition duration-200"
-                            >
-                                Post Comment
-                            </button>
-                        </div>
-                    </form>
-
-                    {/* Placeholder for loaded comments list */}
-                    <div className="mt-6 pt-6 border-t border-gray-800/60">
-                        <p className="text-xs text-gray-500 italic text-center">
-                            No comments yet. Be the first to start the conversation!
-                        </p>
-                    </div>
-                </div>
+               <CommentSection 
+                    artId={art._id} 
+                    artistId={art.artistId} 
+                    currentUser={currentUser} 
+                />
 
             </div>
         </div>
