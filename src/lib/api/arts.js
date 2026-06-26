@@ -7,6 +7,12 @@ export const getAllArts = async()=>{
     // const res = await fetch(`${baseUrl}/api/all-arts`);
     // return res.json()
 }
+
+export const getArtId = async(id)=>{
+     return serverFetch(`/api/all-arts/${id}`)
+}
+
+
 export const getArtistArts = async(artistId)=>{
     return serverFetch(`/api/my-arts?artistId=${artistId}`)
     // const res = await fetch(`${baseUrl}/api/my-arts?artistId=${artistId}`, {

@@ -73,7 +73,7 @@ const ArtGalleryClient = ({ initialArts }) => {
                             className="border border-gray-800 bg-[#16161a] rounded-xl overflow-hidden shadow-xl hover:border-gray-700/80 transition flex flex-col justify-between group"
                         >
                             <div>
-                                <Link href={`/arts/${art._id}`} className="block aspect-square w-full overflow-hidden bg-gray-900 relative cursor-pointer">
+                                <Link href={`/browse/${art._id}`} className="block aspect-square w-full overflow-hidden bg-gray-900 relative cursor-pointer">
                                     <img 
                                         src={art.imageUrl} 
                                         alt={art.title} 
@@ -85,7 +85,7 @@ const ArtGalleryClient = ({ initialArts }) => {
                                 </Link>
                                 
                                 <div className="p-4">
-                                    <Link href={`/arts/${art._id}`}>
+                                    <Link href={`/browse/${art._id}`}>
                                         <h3 className="text-base font-bold text-gray-100 truncate hover:text-purple-400 transition cursor-pointer">{art.title}</h3>
                                     </Link>
                                     {/* <p className="text-gray-400 text-xs mt-1 line-clamp-2 h-8">{art.description}</p> */}
@@ -111,7 +111,7 @@ const ArtGalleryClient = ({ initialArts }) => {
                                     </div>
                                 </div>
                                 <Link 
-                                    href={`/arts/${art._id}`}
+                                    href={`/browse/${art._id}`}
                                     className="block w-full text-center bg-[#1b1b22] hover:bg-linear-to-r hover:from-[#a78bfa] hover:to-[#f472b6] text-purple-300 hover:text-black border border-purple-900/50 hover:border-transparent text-xs font-bold py-2.5 px-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-purple-500/20 tracking-wider uppercase"
                                 >
                                     🛍️ View & Purchase
