@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button, TextField, Label, FieldError, Card, CardHeader } from "@heroui/react";
 import { Eye, EyeSlash } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client"; 
@@ -13,6 +13,9 @@ export default function LoginPage() {
   // Form States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/"
   
   // Validation State
   const [wasSubmitted, setWasSubmitted] = useState(false);
@@ -44,7 +47,6 @@ export default function LoginPage() {
       const { data, error } = await authClient.signIn.email({
         email: email,
         password: password,
-        callbackURL: "/", 
       });
 
       if (error) {
@@ -52,14 +54,13 @@ export default function LoginPage() {
       } else {
         setStatus({
           type: "success",
-          message: "Logged in successfully! Redirecting..."
+          message: "Logged in successfully!"
         });
-        setTimeout(() => {
-          router.push("/");
-        }, 1500);
+        
         setEmail("");
         setPassword("");  
         setWasSubmitted(false);
+        window.location.href = redirectTo;
       }
     } catch (err) {
         setStatus({ type: "danger", message: "An unexpected error occurred." });
@@ -88,6 +89,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
+                autoComplete="email"
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
               />
@@ -102,6 +104,7 @@ export default function LoginPage() {
                   type={isVisible ? "text" : "password"}
                   placeholder="Enter your password"
                   value={password}
+                  autoComplete="current-password"
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 pr-10 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
                 />
@@ -145,7 +148,7 @@ export default function LoginPage() {
           <div className="flex flex-col items-center justify-center gap-3 mt-3">
             <p className="text-small text-default-500">
               Don't have an account?{" "}
-              <Link href="/auth/register" className="text-[#db2777] hover:underline font-semibold">
+              <Link href={`/auth/register?redirect=${redirectTo}`} className="text-[#db2777] hover:underline font-semibold">
                 Register
               </Link>
             </p>

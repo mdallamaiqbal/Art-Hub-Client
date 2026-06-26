@@ -18,13 +18,7 @@ export default function Navbar() {
   const pathname = usePathname(); // Get the current active URL path
 
   const handleSignout = async () => {
-    await signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/auth/login"); // redirect to login page
-        },
-      },
-    })
+    await signOut();
   }
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);

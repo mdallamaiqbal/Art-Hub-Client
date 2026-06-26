@@ -2,21 +2,22 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams} from "next/navigation";
 import { Button, TextField, Label, FieldError, Card, CardHeader } from "@heroui/react";
 import { Description, Radio, RadioGroup } from "@heroui/react";
 import { Eye, EyeSlash } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client";
 
 export default function RegisterPage() {
-  const router = useRouter();
-
+  // const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   // Form States
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user")
+  const [role, setRole] = useState("user");
 
   // Validation State
   const [wasSubmitted, setWasSubmitted] = useState(false);
@@ -52,7 +53,6 @@ export default function RegisterPage() {
         name: name,
         image: photoUrl || undefined,
         role: role,
-        callbackURL: "/",
       });
 
       if (error) {
@@ -62,14 +62,12 @@ export default function RegisterPage() {
           type: "success",
           message: "Account created successfully! Redirecting..."
         });
-        setTimeout(() => {
-          router.push("/");
-        }, 1500);
         setName("");
         setEmail("");
         setPassword("");
         setPhotoUrl("");
         setWasSubmitted(false);
+        window.location.href = redirectTo;
       }
     } catch (err) {
       setStatus({ type: "danger", message: "An unexpected error occurred." });
@@ -98,6 +96,7 @@ export default function RegisterPage() {
                 type="text"
                 placeholder="Enter your Name"
                 value={name}
+                 autoComplete="user-Name"
                 onChange={(e) => setName(e.target.value)}
                 className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
               />
@@ -111,6 +110,7 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
+                autoComplete="email"
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
               />
@@ -124,6 +124,7 @@ export default function RegisterPage() {
                 type="url"
                 placeholder="https://example.com/avatar.jpg (Optional)"
                 value={photoUrl}
+                autoComplete="Photo Url"
                 onChange={(e) => setPhotoUrl(e.target.value)}
                 className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
               />
@@ -137,6 +138,7 @@ export default function RegisterPage() {
                   type={isVisible ? "text" : "password"}
                   placeholder="Enter your password"
                   value={password}
+                  autoComplete="current-password"
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full rounded-xl border border-default-200 bg-transparent p-2.5 pr-10 text-sm text-default-900 shadow-xs outline-hidden focus:border-purple-500 transition-colors dark:border-zinc-700"
                 />
@@ -200,7 +202,7 @@ export default function RegisterPage() {
           <div className="flex flex-col items-center justify-center gap-3 mt-3">
             <p className="text-small text-default-500">
               Already have an account?{" "}
-              <Link href="/auth/login" className="text-[#db2777] hover:underline font-semibold">
+              <Link href={`/auth/login?redirect=${redirectTo}`} className="text-[#db2777] hover:underline font-semibold">
                 Login
               </Link>
             </p>

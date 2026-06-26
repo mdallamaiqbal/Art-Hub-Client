@@ -1,23 +1,17 @@
 import CommentSection from '@/app/components/commentSection';
 import { getArtId } from '@/lib/api/arts';
 import { getUserSession } from '@/lib/core/session';
+import Link from 'next/link';
 import React from 'react';
 
 const ArtDetailPage = async ({ params }) => {
     const { id } = await params;
   
-   
     const [art, userSession] = await Promise.all([
         getArtId(id),
         getUserSession()
     ]);
 
-    const currentUser = userSession ? {
-        email: userSession.email,
-        name: userSession.name,
-        image: userSession.image || userSession.avatar || "",
-        artistId: userSession.artistId || userSession.id || userSession._id 
-    } : null;
     if (!art) {
         return (
             <div className="min-h-screen bg-[#111115] text-gray-100 flex items-center justify-center">
@@ -25,6 +19,18 @@ const ArtDetailPage = async ({ params }) => {
             </div>
         );
     }
+
+    const currentUser = userSession ? {
+        email: userSession.email,
+        name: userSession.name,
+        role: userSession.role,
+        image: userSession.image || userSession.avatar || "",
+        artistId: userSession.artistId || userSession.id || userSession._id 
+    } : null;
+
+    const isLoggedIn = !!currentUser;
+    const isUserRole = currentUser?.role === 'user';
+    const canPurchase = isLoggedIn && isUserRole;
 
     return (
         <div className="min-h-screen bg-[#111115] text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -60,12 +66,11 @@ const ArtDetailPage = async ({ params }) => {
                         </div>
 
                         {/* Right Side: Price, Artist Bio, Purchase Button */}
-                        <div className="flex flex-col  h-[10vz] space-y-6 bg-gray-900/30 p-6 rounded-xl border border-gray-800/60">
+                        <div className="flex flex-col space-y-6 bg-gray-900/30 p-6 rounded-xl border border-gray-800/60">
                             <div>
                                 <span className="text-xs uppercase tracking-wider text-gray-500 font-bold block mb-1">
                                     Price
                                 </span>
-                                {/* Price requirement met: text-3xl */}
                                 <div className="text-3xl font-black text-pink-500">
                                     ${typeof art.price === 'number' ? art.price.toFixed(2) : art.price}
                                 </div>
@@ -86,22 +91,49 @@ const ArtDetailPage = async ({ params }) => {
                                 </div>
                             </div>
 
-                            {/* Action Button */}
-                            <button 
-                                className="w-full text-center bg-[#1b1b22] hover:bg-gradient-to-r hover:from-[#a78bfa] hover:to-[#f472b6] text-purple-300 hover:text-black border border-purple-900/50 hover:border-transparent text-sm font-bold py-3.5 px-6 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-purple-500/20 tracking-wider uppercase"
-                            >
-                                💳 Purchase Artwork
-                            </button>
+                            {/* --- Purchase Section Condition --- */}
+                            {!isLoggedIn ? (
+                                <Link
+                                    href={`/auth/login?redirect=/browse/${id}`} 
+                                    className="w-full text-center bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold py-3.5 px-6 rounded-xl transition-all tracking-wider uppercase border border-gray-700"
+                                >
+                                    🔒 Login to Purchase
+                                </Link>
+                            ) : !canPurchase ? (
+                                <div className="w-full text-center bg-red-950/20 text-red-400 border border-red-900/40 text-xs font-semibold py-3 px-4 rounded-xl">
+                                    Only standard user accounts can purchase.
+                                </div>
+                            ) : (
+                                <Link
+                                    href={`/browse/${id}/purchase`} 
+                                    className="w-full text-center bg-[#1b1b22] hover:bg-gradient-to-r hover:from-[#a78bfa] hover:to-[#f472b6] text-purple-300 hover:text-black border border-purple-900/50 hover:border-transparent text-sm font-bold py-3.5 px-6 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-purple-500/20 tracking-wider uppercase"
+                                >
+                                    💳 Purchase Artwork
+                                </Link>
+                            )}
                         </div>
 
                     </div>
                 </div>
 
-               <CommentSection 
-                    artId={art._id} 
-                    artistId={art.artistId} 
-                    currentUser={currentUser} 
-                />
+                {/* --- Comment Section Condition --- */}
+                {isLoggedIn ? (
+                    <CommentSection 
+                        artId={art._id} 
+                        artistId={art.artistId} 
+                        currentUser={currentUser} 
+                    />
+                ) : (
+                    <div className="mt-8 border border-gray-800 bg-[#16161a] rounded-2xl p-6 text-center">
+                        <p className="text-gray-400 text-sm mb-3">Want to join the discussion?</p>
+                        <Link 
+                            href={`/auth/login?redirect=/browse/${id}`}
+                            className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl uppercase tracking-wider transition-colors"
+                        >
+                            Login to Comment
+                        </Link>
+                    </div>
+                )}
 
             </div>
         </div>
