@@ -18,7 +18,6 @@ const ArtDetailPage = async ({ params }) => {
         image: userSession.image || userSession.avatar || "",
         artistId: userSession.artistId || userSession.id || userSession._id 
     } : null;
-    // Guard clause if art data is not found
     if (!art) {
         return (
             <div className="min-h-screen bg-[#111115] text-gray-100 flex items-center justify-center">

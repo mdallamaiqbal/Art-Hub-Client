@@ -56,3 +56,30 @@ export const deleteComment = async (id, userEmail, loggedInArtistId) => {
         return false;
     }
 };
+
+export const deleteReply = async (commentId, replyId, userEmail) => {
+    try {
+        const res = await fetch(`${baseUrl}/api/comments/${commentId}/reply/${replyId}?userEmail=${userEmail}`, {
+            method: 'DELETE',
+        });
+        const data = await res.json();
+        return data.success;
+    } catch (error) {
+        console.error("Error deleting reply:", error);
+        return false;
+    }
+};
+
+export const createReply = async (commentId, replyData) => {
+    try {
+        const res = await fetch(`${baseUrl}/api/comments/${commentId}/reply`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(replyData)
+        });
+        return res.ok;
+    } catch (error) {
+        console.error("createReply error:", error);
+        return false;
+    }
+};
