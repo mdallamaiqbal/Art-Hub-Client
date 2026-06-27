@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch, serverMutation } from "../core/server";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -15,17 +15,18 @@ export const getCommentsByArtId = async (artId) => {
 
 
 export const createComment = async (commentData) => {
-    try {
-        const res = await fetch(`${baseUrl}/api/comments`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(commentData)
-        });
-        return res.ok;
-    } catch (error) {
-        console.error("createComment error:", error);
-        return false;
-    }
+    return serverMutation('/api/comments', commentData);
+    // try {
+    //     const res = await fetch(`${baseUrl}/api/comments`, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify(commentData)
+    //     });
+    //     return res.ok;
+    // } catch (error) {
+    //     console.error("createComment error:", error);
+    //     return false;
+    // }
 };
 
 export const updateComment = async (id, text, userEmail) => {

@@ -1,10 +1,13 @@
+import { serverFetch } from "../core/server";
+
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getUserProfile = async (email) => {
-    const res = await fetch(`${baseUrl}/api/users?email=${email}`, {
-        cache: 'no-store'
-    });
-    return res.json();
+    return serverFetch(`/api/users?email=${email}`)
+    // const res = await fetch(`${baseUrl}/api/users?email=${email}`, {
+    //     cache: 'no-store'
+    // });
+    // return res.json();
 };
 
 export const updateUserProfile = async (profileData) => {

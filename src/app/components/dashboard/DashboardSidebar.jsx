@@ -1,16 +1,28 @@
 
+import { getUserSession } from "@/lib/core/session";
 import { LayoutSideContentLeft} from "@gravity-ui/icons";
 import {Button, Drawer} from "@heroui/react";
-import { LayoutGrid, Plus, ShoppingBag, User } from "lucide-react";
+import { History, Image, LayoutGrid, Plus, ShoppingBag, User } from "lucide-react";
 import Link from "next/link";
 
-export function DashboardSidebar() {
-  const navItems = [
+export async function DashboardSidebar() {
+  const user = await getUserSession()
+  const userNavLinks =[
+  {icon: User, href: "/dashboard/user", label: "Profile Management"},
+  {icon: Image, href: "/dashboard/user/boughtArtworks", label: "Bought Artworks"},
+  {icon: History, href: "/dashboard/user/purchaseHistory", label: "Purchase History"}
+  ]
+  const artistNavLinks = [
     {icon: User, href:"/dashboard/artist" , label: "Profile Management"},
     {icon: Plus, href:"/dashboard/artist/addArtwork" , label: "AddArtwork"},
     {icon: LayoutGrid, href:"/dashboard/artist/manageArtworks" , label: "ManageArtworks"},
     {icon: ShoppingBag, href:"/dashboard/artist/salesHistory" , label: "Sales History"},
-  ];
+  ]
+  const navLinksMap={
+    user: userNavLinks,
+    artist: artistNavLinks
+  }
+  const navItems = navLinksMap[user.role || 'user'];
 
   const navContents = <nav className="flex flex-col gap-1">
                 {navItems.map((item) => (

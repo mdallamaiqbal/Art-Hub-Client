@@ -27,7 +27,18 @@ export default function Navbar() {
     { label: "Home", href: "/" },
     { label: "Browse Artworks", href: "/browse" },
   ];
-
+  const dashboardLinks={
+    user: '/dashboard/user',
+    artist: '/dashboard/artist'
+  }
+  if(user?.email){
+    menuItems.push(
+      {
+        label: "Dashboard", 
+        href: dashboardLinks[user?.role || 'user']
+      }
+    )
+  }
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-zinc-800 bg-[#0f111a]/70 backdrop-blur-lg text-white">
       {/* Header Container */}
