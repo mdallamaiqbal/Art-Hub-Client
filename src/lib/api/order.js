@@ -13,6 +13,9 @@ export const createOrder = async (orderData) => {
     // return res.json()
 };
 
+ export const getOrderByUser = async(userId)=>{
+    return serverFetch(`/api/orders?userId=${userId}`);
+ }
 
 export const getUserPurchaseHistory = async (email) => {
     return serverFetch(`/api/user-purchases/${email}`);
