@@ -33,6 +33,7 @@ const PurchasePage = async ({ params }) => {
         artId: art._id,
         artTitle: art.title,
         artistName: art.artistName || "Anonymous Artist",
+        artistId: art.artistId,
         artImage: art.imageUrl,
         price: art.price,
         userId: user.id,
