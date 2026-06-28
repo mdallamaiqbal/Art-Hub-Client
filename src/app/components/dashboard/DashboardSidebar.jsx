@@ -2,7 +2,7 @@
 import { getUserSession } from "@/lib/core/session";
 import { LayoutSideContentLeft} from "@gravity-ui/icons";
 import {Button, Drawer} from "@heroui/react";
-import { History, Image, LayoutGrid, Plus, ShoppingBag, User } from "lucide-react";
+import { BarChart3, History, HistoryIcon, Image, LayoutGrid, Paintbrush, PieChart, Plus, ShoppingBag, User, Users } from "lucide-react";
 import Link from "next/link";
 
 export async function DashboardSidebar() {
@@ -18,9 +18,17 @@ export async function DashboardSidebar() {
     {icon: LayoutGrid, href:"/dashboard/artist/manageArtworks" , label: "ManageArtworks"},
     {icon: ShoppingBag, href:"/dashboard/artist/salesHistory" , label: "Sales History"},
   ]
+  const adminNavLinks = [
+    {icon: Users, href:"/dashboard/admin/manageUsers" , label: "Manage Users"},
+    {icon: Paintbrush, href:"/dashboard/admin/manageAllArtworks" , label: "Manage All Artworks"},
+    {icon: HistoryIcon, href:"/dashboard/admin/viewAllTransactions" , label: "View All Transactions"},
+    {icon: BarChart3, href:"/dashboard/admin/analyticsOverview" , label: "Analytics Overview"},
+    {icon: PieChart, href:"/dashboard/admin/charts" , label: "Charts"}
+  ]
   const navLinksMap={
     user: userNavLinks,
-    artist: artistNavLinks
+    artist: artistNavLinks,
+    admin: adminNavLinks
   }
   const navItems = navLinksMap[user?.role || 'user'];
 
