@@ -9,3 +9,10 @@ export const updateUserRole = async (userId, newRole) => {
     
     return res.json();
 };
+
+export const deleteArtwork = async (artworkId) => {
+    const res = await fetch(`${baseUrl}/api/admin/artwork/${artworkId}`, {
+        method: 'DELETE',
+    });
+    return res.json();
+};
