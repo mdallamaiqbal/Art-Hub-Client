@@ -1,5 +1,6 @@
 import CommentSection from '@/app/components/commentSection';
 import { getArtId } from '@/lib/api/arts';
+import { checkSingleArtPurchase } from '@/lib/api/order';
 import { getUserSession } from '@/lib/core/session';
 import Link from 'next/link';
 import React from 'react';
@@ -31,6 +32,13 @@ const ArtDetailPage = async ({ params }) => {
     const isLoggedIn = !!currentUser;
     const isUserRole = currentUser?.role === 'user';
     const canPurchase = isLoggedIn && isUserRole;
+
+   
+    let isAlreadyPurchased = false;
+    if (isLoggedIn) {
+        const orders = await checkSingleArtPurchase(currentUser.artistId, art._id);
+        isAlreadyPurchased = orders && orders.length > 0;
+    }
 
     return (
         <div className="min-h-screen bg-[#111115] text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -103,10 +111,17 @@ const ArtDetailPage = async ({ params }) => {
                                 <div className="w-full text-center bg-red-950/20 text-red-400 border border-red-900/40 text-xs font-semibold py-3 px-4 rounded-xl">
                                     Only standard user accounts can purchase.
                                 </div>
+                            ) : isAlreadyPurchased ? (
+                                <button
+                                    disabled
+                                    className="w-full text-center bg-gray-800/40 text-gray-500 border border-gray-800/80 text-sm font-bold py-3.5 px-6 rounded-xl cursor-not-allowed tracking-wider uppercase"
+                                >
+                                    ✔ Already Purchased
+                                </button>
                             ) : (
                                 <Link
                                     href={`/browse/${id}/purchase`} 
-                                    className="w-full text-center bg-[#1b1b22] hover:bg-gradient-to-r hover:from-[#a78bfa] hover:to-[#f472b6] text-purple-300 hover:text-black border border-purple-900/50 hover:border-transparent text-sm font-bold py-3.5 px-6 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-purple-500/20 tracking-wider uppercase"
+                                    className="w-full text-center bg-[#1b1b22] hover:bg-linear-to-r hover:from-purple-400  hover:to-pink-500 text-purple-300 hover:text-black border border-purple-900/50 hover:border-transparent text-sm font-bold py-3.5 px-6 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-purple-500/20 tracking-wider uppercase"
                                 >
                                     💳 Purchase Artwork
                                 </Link>

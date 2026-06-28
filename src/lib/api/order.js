@@ -1,5 +1,5 @@
 import { serverFetch, serverMutation } from "../core/server";
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 
 export const createOrder = async (orderData) => {
     return serverMutation('/api/orders', orderData);
@@ -16,7 +16,12 @@ export const createOrder = async (orderData) => {
  export const getOrderByUser = async(userId)=>{
     return serverFetch(`/api/orders?userId=${userId}`);
  }
+ 
 
-export const getUserPurchaseHistory = async (email) => {
-    return serverFetch(`/api/user-purchases/${email}`);
+export const getUserPurchaseHistory = async (userId) => {
+    return serverFetch(`/api/user-purchases/${userId}`);
+};
+
+export const checkSingleArtPurchase = async (userId, artId) => {
+    return serverFetch(`/api/orders?userId=${userId}&artId=${artId}`);
 };

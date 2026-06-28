@@ -24,6 +24,7 @@ export async function POST(request) {
         },
       ],
       mode: 'subscription',
+      metadata: {tierId},
       success_url: `${origin}/tier/success?session_id={CHECKOUT_SESSION_ID}`,
     });
     return NextResponse.redirect(session.url, 303)

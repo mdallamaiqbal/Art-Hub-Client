@@ -45,6 +45,7 @@ export default function RegisterPage() {
       return;
     }
     setIsLoading(true);
+    const tier = role === 'user' ? 'user_free' : 'none'
 
     try {
       const { data, error } = await authClient.signUp.email({
@@ -53,6 +54,7 @@ export default function RegisterPage() {
         name: name,
         image: photoUrl || undefined,
         role: role,
+        tier: tier
       });
 
       if (error) {

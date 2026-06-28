@@ -6,12 +6,12 @@ import { getArtId } from '@/lib/api/arts';
 import Link from 'next/link';
 import OrderSubmitButton from './OrderSubmitButton';
 import { getOrderByUser } from '@/lib/api/order';
+import { getTierById } from '@/lib/api/tier';
 
 
 const PurchasePage = async ({ params }) => {
     const { id } = await params;
     const user = await getUserSession();
-
     if (!user) {
         redirect(`/auth/login?redirect=/browse/${id}/purchase`);
     }
@@ -33,18 +33,18 @@ const PurchasePage = async ({ params }) => {
         artId: art._id,
         artTitle: art.title,
         artistName: art.artistName || "Anonymous Artist",
+        artImage: art.imageUrl,
         price: art.price,
         userId: user.id,
         userEmail: user.email,
         userName: user.name
     };
 
-    const userOrders = await getOrderByUser(user.id);
+    const userOrders = await getOrderByUser(user?.id);
+    
     const currentPurchaseCount = userOrders.length;
-    const tier ={
-      name: 'Free',
-      maxPurchase: 3
-    }
+   
+   const tier = await getTierById(user?.tier || 'user_free')
 
     const hasReachedLimit = currentPurchaseCount >= tier.maxPurchase;
 

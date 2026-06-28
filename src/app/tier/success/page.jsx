@@ -2,6 +2,8 @@ import { stripe } from '@/lib/stripe';
 import { redirect } from 'next/navigation';
 import { Card, CardHeader, CardFooter, Button } from "@heroui/react";
 import Link from 'next/link';
+import { email } from 'better-auth';
+import { createSubscription } from '@/lib/actions/subscriptions';
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams;
@@ -12,7 +14,8 @@ export default async function Success({ searchParams }) {
 
   const {
     status,
-    customer_details
+    customer_details,
+    metadata
   } = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ['line_items', 'payment_intent']
   });
@@ -24,6 +27,12 @@ export default async function Success({ searchParams }) {
   }
 
   if (status === 'complete') {
+    const subsInfo ={
+      email: customerEmail,
+      tierId: metadata?.tierId
+    }
+    const result = await createSubscription(subsInfo)
+    console.log(result)
     return (
       <div className="min-h-screen bg-[#111115] text-gray-100 p-6 flex items-center justify-center">
         <Card className="max-w-md w-full bg-[#16161a] border border-purple-500/30 p-8 rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] text-center">

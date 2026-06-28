@@ -22,7 +22,7 @@ export async function DashboardSidebar() {
     user: userNavLinks,
     artist: artistNavLinks
   }
-  const navItems = navLinksMap[user.role || 'user'];
+  const navItems = navLinksMap[user?.role || 'user'];
 
   const navContents = <nav className="flex flex-col gap-1">
                 {navItems.map((item) => (
