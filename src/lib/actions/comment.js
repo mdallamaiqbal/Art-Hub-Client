@@ -1,4 +1,4 @@
-import { serverFetch, serverMutation } from "../core/server";
+import { authHeader, serverFetch, serverMutation } from "../core/server";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -33,7 +33,9 @@ export const updateComment = async (id, text, userEmail) => {
     try {
         const res = await fetch(`${baseUrl}/api/comments/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+                  ... await authHeader()
+             },
             body: JSON.stringify({ text, userEmail })
         });
         return res.ok;
@@ -48,7 +50,9 @@ export const deleteComment = async (id, userEmail, loggedInArtistId) => {
     try {
         const res = await fetch(`${baseUrl}/api/comments/${id}`, {
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+                ... await authHeader()
+             },
             body: JSON.stringify({ userEmail, loggedInArtistId })
         });
         return res.ok;
@@ -62,6 +66,9 @@ export const deleteReply = async (commentId, replyId, userEmail) => {
     try {
         const res = await fetch(`${baseUrl}/api/comments/${commentId}/reply/${replyId}?userEmail=${userEmail}`, {
             method: 'DELETE',
+            headers:{
+                  ... await authHeader()
+            }
         });
         const data = await res.json();
         return data.success;
@@ -75,7 +82,9 @@ export const createReply = async (commentId, replyData) => {
     try {
         const res = await fetch(`${baseUrl}/api/comments/${commentId}/reply`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+                  ... await authHeader()
+             },
             body: JSON.stringify(replyData)
         });
         return res.ok;

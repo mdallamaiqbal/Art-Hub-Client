@@ -1,4 +1,4 @@
-import { serverFetch, serverMutation } from "../core/server";
+import { protectedFetch, serverFetch, serverMutation } from "../core/server";
 
 
 export const createOrder = async (orderData) => {
@@ -14,7 +14,7 @@ export const createOrder = async (orderData) => {
 };
 
  export const getOrderByUser = async(userId)=>{
-    return serverFetch(`/api/orders?userId=${userId}`);
+    return protectedFetch(`/api/orders?userId=${userId}`);
  }
  
 

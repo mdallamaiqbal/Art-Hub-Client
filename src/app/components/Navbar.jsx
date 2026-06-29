@@ -30,7 +30,7 @@ export default function Navbar() {
   const dashboardLinks={
     user: '/dashboard/user',
     artist: '/dashboard/artist',
-    admin: '/dashboard/admin'
+    admin: '/dashboard/admin/manageUsers'
   }
   if(user?.email){
     menuItems.push(

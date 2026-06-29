@@ -1,6 +1,6 @@
 "use server"
 
-import { serverMutation } from "../core/server";
+import { authHeader, serverMutation } from "../core/server";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 export const createArt = async(newArtData)=>{
@@ -17,7 +17,10 @@ export const createArt = async(newArtData)=>{
 
 export const getArtById = async (id) => {
     const res = await fetch(`${baseUrl}/api/arts/${id}`, {
-        method: 'GET'
+        method: 'GET',
+         headers:{ 
+            ... await authHeader()
+         }
     });
     return res.json();
 };

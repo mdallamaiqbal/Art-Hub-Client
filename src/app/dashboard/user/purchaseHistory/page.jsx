@@ -17,6 +17,7 @@ const PurchaseHistoryPage = async () => {
     }
 
     const purchases = await getUserPurchaseHistory(user.id);
+    
 
     return (
         <div className="min-h-screen bg-[#111115] text-gray-100 p-6 md:p-10">

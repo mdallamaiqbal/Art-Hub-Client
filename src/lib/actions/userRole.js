@@ -1,9 +1,13 @@
+import { authHeader } from "../core/server";
+
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const updateUserRole = async (userId, newRole) => {
     const res = await fetch(`${baseUrl}/api/admin/update-role`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+              ... await authHeader()
+         },
         body: JSON.stringify({ userId, newRole }),
     });
     
@@ -13,6 +17,9 @@ export const updateUserRole = async (userId, newRole) => {
 export const deleteArtwork = async (artworkId) => {
     const res = await fetch(`${baseUrl}/api/admin/artwork/${artworkId}`, {
         method: 'DELETE',
+        headers:{
+                  ... await authHeader()
+      }
     });
     return res.json();
 };
