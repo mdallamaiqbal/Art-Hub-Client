@@ -1,12 +1,11 @@
 import React from 'react';
 import { getUserSession } from '@/lib/core/session';
-
-import { redirect } from 'next/navigation';
 import { getArtistSalesHistory } from '@/lib/api/artistSales';
 
 const SalesHistoryPage = async () => {
     const user = await getUserSession();
     const sales = await getArtistSalesHistory(user.id || user._id);
+ 
 
     return (
         <div className="min-h-screen bg-[#111115] text-gray-100 p-6 md:p-12">
@@ -31,7 +30,7 @@ const SalesHistoryPage = async () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-800/60 text-sm text-gray-300">
-                                {sales.map((sale) => (
+                                {sales?.map((sale) => (
                                     <tr key={sale._id} className="hover:bg-gray-900/30 transition-colors">
                                         <td className="p-4 font-semibold text-gray-200">{sale.artTitle}</td>
                                         <td className="p-4 text-gray-400">{sale.userName || "Anonymous Buyer"}</td>

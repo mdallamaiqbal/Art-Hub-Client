@@ -16,6 +16,7 @@ const DeleteArtworkButton = ({ artworkId, title }) => {
         try {
             const data = await deleteArtwork(artworkId);
 
+
             if (data.success || data.deletedCount > 0) {
                 router.refresh(); 
                 setIsOpen(false); 

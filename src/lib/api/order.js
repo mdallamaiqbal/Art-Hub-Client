@@ -14,7 +14,7 @@ export const createOrder = async (orderData) => {
 };
 
  export const getOrderByUser = async(userId)=>{
-    return protectedFetch(`/api/orders?userId=${userId}`);
+    return serverFetch(`/api/orders?userId=${userId}`);
  }
  
 
@@ -23,5 +23,6 @@ export const getUserPurchaseHistory = async (userId) => {
 };
 
 export const checkSingleArtPurchase = async (userId, artId) => {
+    console.log(userId,artId,'single purchase')
     return serverFetch(`/api/orders?userId=${userId}&artId=${artId}`);
 };

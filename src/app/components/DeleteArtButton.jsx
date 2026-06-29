@@ -15,6 +15,7 @@ export default function DeleteArtButton({ artId }) {
         setLoading(true);
         try {
             const data = await deleteArt(artId);
+            console.log(data)
             if (data.deletedCount > 0) {
                 router.refresh();
                 setIsOpen(false);

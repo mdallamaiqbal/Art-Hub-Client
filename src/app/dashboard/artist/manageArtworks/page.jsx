@@ -1,113 +1,132 @@
-import { auth } from "@/lib/auth";
 import React from 'react';
-import { Table } from "@heroui/react";
-import ArtActions from '@/app/components/dashboard/ArtActions';
-import Link from "next/link";
-import { getArtistArts } from "@/lib/api/arts";
-import { getUserSession } from "@/lib/core/session";
+import Link from 'next/link';
+import { getAllArts } from '@/lib/api/arts';
 
+import DeleteArtButton from '@/app/components/DeleteArtButton';
 
-const manageArtworksPage = async () => {
-    const user = await getUserSession();
-    const artistId = user?.id || user?._id; 
-    let manageArtwork = artistId ? await getArtistArts(artistId) : [];
+const ManageArtworksPage = async ({ searchParams }) => {
+    const resolvedSearchParams = await searchParams;
 
-    if (!Array.isArray(manageArtwork)) {
-        console.error("API did not return an array:", manageArtwork);
-        manageArtwork = [];
-    }
+    const allArtworks = await getAllArts();
+    const currentPage = Number(resolvedSearchParams?.page) || 1;
+    const itemsPerPage = 10;
+
+    const totalItems = allArtworks?.length || 0;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedArtworks = allArtworks.slice(startIndex, endIndex);
 
     return (
-      <div className="p-4 md:p-6 min-h-screen text-white w-full max-w-7xl mx-auto">
-    <h2 className="text-xl font-bold mb-6 text-gray-200">
-        Manage Artworks ({manageArtwork?.length || 0})
-    </h2>
-    
-    {manageArtwork?.length === 0 ? (
-        <div className="w-full rounded-xl border border-gray-800/60 bg-[#16161a] py-16 px-4 flex flex-col items-center justify-center text-center">
-            <div className="text-5xl mb-4 animate-bounce">🎨</div>
-            <h3 className="text-xl font-semibold text-gray-200 mb-2">No Artworks Found</h3>
-            <p className="text-sm text-gray-400 max-w-sm mb-6">
-                You haven't uploaded any masterpieces yet. Share your creative work with the world!
-            </p>
-            <Link
-                href="/dashboard/artist/addArtwork"
-                className="px-6 py-2.5 rounded-xl font-bold bg-linear-to-r from-[#a78bfa] via-[#c084fc] to-[#f472b6] text-white hover:opacity-90 transition shadow-lg"
-            >
-                Create Your First Art
-            </Link>
-        </div>
-    ) : (
-        <div className="w-full rounded-xl border border-gray-800/80 bg-[#16161a]">
-            <Table className="dark w-full table-fixed"> 
-                <Table.ResizableContainer>
-                    <Table.Content aria-label="Artworks management table">
-                        <Table.Header>
-                            <Table.Column isRowHeader defaultWidth="2.5fr" id="title" minWidth={140}>
-                                Art Title
-                                <Table.ColumnResizer />
-                            </Table.Column>
-                           
-                            <Table.Column defaultWidth="1.2fr" id="category" minWidth={100}>
-                                Category
-                                <Table.ColumnResizer />
-                            </Table.Column>
-                            
-                            <Table.Column defaultWidth="1fr" id="price" minWidth={70}>
-                                Price
-                                <Table.ColumnResizer />
-                            </Table.Column>
-                            
-                            <Table.Column defaultWidth="1fr" id="actions" minWidth={80}>
-                                Actions
-                            </Table.Column>
-                        </Table.Header>
-                        
-                        <Table.Body>
-                            {manageArtwork?.map((art) => (
-                                <Table.Row key={art._id} className="border-b border-gray-800/50 hover:bg-gray-900/40 transition">
+        <div className="min-h-screen bg-[#111115] text-gray-100 p-6 md:p-12">
+            <div className="max-w-7xl mx-auto">
+                <h1 className="text-2xl md:text-3xl font-black mb-6 tracking-tight text-purple-400">
+                    🖼️ Manage All Artworks
+                </h1>
 
-                                    <Table.Cell>
-                                        <div className="flex items-center gap-2 md:gap-3 py-1 min-w-0">
-                                            {art.imageUrl && (
-                                                <img 
-                                                    src={art.imageUrl} 
-                                                    alt={art.title} 
-                                                    className="w-8 h-8 md:w-10 md:h-10 rounded-md object-cover border border-gray-700 flex-shrink-0"
+                {paginatedArtworks.length === 0 ? (
+                    <div className="bg-[#16161a] border border-gray-800 rounded-2xl p-8 text-center text-gray-400">
+                        No artworks found.
+                    </div>
+                ) : (
+                    <>
+                        <div className="overflow-x-auto bg-[#16161a] border border-gray-800 rounded-2xl shadow-xl">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="border-b border-gray-800 bg-gray-900/50 text-gray-400 text-xs uppercase tracking-wider font-bold">
+                                        <th className="p-4">Title</th>
+                                        <th className="p-4">Artist Name</th>
+                                        <th className="p-4">Price</th>
+                                        <th className="p-4 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody className="divide-y divide-gray-800/60 text-sm text-gray-300">
+                                    {paginatedArtworks.map((art) => (
+                                        <tr
+                                            key={art._id || art.id}
+                                            className="hover:bg-gray-900/30 transition-colors"
+                                        >
+                                            <td className="p-4 font-semibold text-gray-200">
+                                                {art.title || 'Untitled'}
+                                            </td>
+
+                                            <td className="p-4 text-gray-400">
+                                                {art.artistName ||
+                                                    art.artistEmail ||
+                                                    'Unknown Artist'}
+                                            </td>
+
+                                            <td className="p-4 font-bold text-pink-500">
+                                                {art.price
+                                                    ? `$${Number(
+                                                          art.price
+                                                      ).toFixed(2)}`
+                                                    : 'Free'}
+                                            </td>
+
+                                            <td className="p-4 text-center">
+                                                {/* 💡 ২. এখানে artworkId বদলে artId দিন, কারণ বাটনের ভেতরে artId ডিক্লেয়ার করা */}
+                                                <DeleteArtButton
+                                                    artId={art._id || art.id}
+                                                    title={art.title}
                                                 />
-                                            )}
-                                            <span className="font-semibold text-xs md:text-sm text-gray-100 truncate block">
-                                                {art.title}
-                                            </span>
-                                        </div>
-                                    </Table.Cell>
-                                    
-                                    <Table.Cell>
-                                        <span className="text-xs md:text-sm font-medium text-gray-300 truncate block">
-                                            {art.category || 'Painting'}
-                                        </span>
-                                    </Table.Cell>
-                                    
-                                    <Table.Cell>
-                                        <span className="text-xs md:text-sm text-gray-200 font-medium">
-                                            ${typeof art.price === 'number' ? art.price.toFixed(2) : art.price}
-                                        </span>
-                                    </Table.Cell>
-                                    
-                                    <Table.Cell>
-                                        <ArtActions artId={art._id} />
-                                    </Table.Cell>
-                                    
-                                </Table.Row>
-                            ))}
-                        </Table.Body>
-                    </Table.Content>
-                </Table.ResizableContainer>
-            </Table>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-between mt-6 bg-[#16161a] border border-gray-800 px-6 py-4 rounded-2xl">
+                                <span className="text-xs text-gray-400">
+                                    Showing{' '}
+                                    <span className="text-gray-200 font-bold">
+                                        {startIndex + 1}
+                                    </span>{' '}
+                                    to{' '}
+                                    <span className="text-gray-200 font-bold">
+                                        {Math.min(endIndex, totalItems)}
+                                    </span>{' '}
+                                    of{' '}
+                                    <span className="text-gray-200 font-bold">
+                                        {totalItems}
+                                    </span>{' '}
+                                    entries
+                                </span>
+
+                                <div className="flex gap-2">
+                                    <Link
+                                        href={`?page=${currentPage - 1}`}
+                                        className={`px-4 py-2 border rounded-xl text-xs font-bold transition-all ${
+                                            currentPage <= 1
+                                                ? 'pointer-events-none opacity-40 border-gray-800 text-gray-600'
+                                                : 'border-gray-800 bg-gray-900 text-gray-300 hover:bg-gray-800'
+                                        }`}
+                                    >
+                                        ◀ Previous
+                                    </Link>
+
+                                    <Link
+                                        href={`?page=${currentPage + 1}`}
+                                        className={`px-4 py-2 border rounded-xl text-xs font-bold transition-all ${
+                                            currentPage >= totalPages
+                                                ? 'pointer-events-none opacity-40 border-gray-800 text-gray-600'
+                                                : 'border-gray-800 bg-gray-900 text-gray-300 hover:bg-gray-800'
+                                        }`}
+                                    >
+                                        Next ▶
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
         </div>
-    )}
-</div>
     );
 };
 
-export default manageArtworksPage;
+export default ManageArtworksPage;

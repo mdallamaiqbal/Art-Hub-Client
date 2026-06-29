@@ -3,12 +3,11 @@ import { authHeader, protectedFetch, serverFetch } from "../core/server";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getAllArts = async()=>{
-     return protectedFetch(`/api/all-arts`)
-    // const res = await fetch(`${baseUrl}/api/all-arts`);
-    // return res.json()
+     return serverFetch(`/api/all-arts`)
 }
 
 export const getArtId = async(id)=>{
+    console.log(id)
      return serverFetch(`/api/all-arts/${id}`)
 }
 
@@ -23,10 +22,7 @@ export const getArtistArts = async(artistId)=>{
 
 export const deleteArt = async (id) => {
     const res = await fetch(`${baseUrl}/api/arts/${id}`, {
-        method: 'DELETE',
-        headers:{
-        ... await authHeader()
-        }
+        method: 'DELETE'
     });
     return res.json();
 };
@@ -35,8 +31,8 @@ export const updateArt = async (id, updatedData) => {
     const res = await fetch(`${baseUrl}/api/arts/${id}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json',
-              ... await authHeader()
+            'Content-Type': 'application/json'
+             
         },
         body: JSON.stringify(updatedData)
     });

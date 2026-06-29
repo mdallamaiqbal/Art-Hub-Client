@@ -1,5 +1,6 @@
 import CommentSection from '@/app/components/commentSection';
 import { getArtId } from '@/lib/api/arts';
+
 import { checkSingleArtPurchase } from '@/lib/api/order';
 import { getUserSession } from '@/lib/core/session';
 import Link from 'next/link';

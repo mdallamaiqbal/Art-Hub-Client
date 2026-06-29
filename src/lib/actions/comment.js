@@ -33,8 +33,8 @@ export const updateComment = async (id, text, userEmail) => {
     try {
         const res = await fetch(`${baseUrl}/api/comments/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json',
-                  ... await authHeader()
+            headers: { 'Content-Type': 'application/json'
+                 
              },
             body: JSON.stringify({ text, userEmail })
         });
@@ -50,8 +50,7 @@ export const deleteComment = async (id, userEmail, loggedInArtistId) => {
     try {
         const res = await fetch(`${baseUrl}/api/comments/${id}`, {
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json',
-                ... await authHeader()
+            headers: { 'Content-Type': 'application/json'
              },
             body: JSON.stringify({ userEmail, loggedInArtistId })
         });
@@ -65,10 +64,7 @@ export const deleteComment = async (id, userEmail, loggedInArtistId) => {
 export const deleteReply = async (commentId, replyId, userEmail) => {
     try {
         const res = await fetch(`${baseUrl}/api/comments/${commentId}/reply/${replyId}?userEmail=${userEmail}`, {
-            method: 'DELETE',
-            headers:{
-                  ... await authHeader()
-            }
+            method: 'DELETE'
         });
         const data = await res.json();
         return data.success;
@@ -82,8 +78,8 @@ export const createReply = async (commentId, replyData) => {
     try {
         const res = await fetch(`${baseUrl}/api/comments/${commentId}/reply`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json',
-                  ... await authHeader()
+            headers: { 'Content-Type': 'application/json'
+                 
              },
             body: JSON.stringify(replyData)
         });

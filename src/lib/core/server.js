@@ -16,22 +16,22 @@ export const serverFetch = async(path)=>{
   return res.json()
 }
 
-export const protectedFetch = async(path)=>{
-  const res = await fetch(`${baseUrl}${path}`,
-    {
-      headers: await authHeader()
-    }
-  );
+// export const protectedFetch = async(path)=>{
+//   const res = await fetch(`${baseUrl}${path}`,
+//     {
+//       headers: await authHeader()
+//     }
+//   );
 
-  return handleStatus(res)
-}
+//   return handleStatus(res)
+// }
 
 export const serverMutation = async(path,data)=>{
   const res = await fetch(`${baseUrl}${path}`,{
     method: 'POST',
     headers:{
       'Content-Type': 'application/json',
-      ... await authHeader()
+      ...await authHeader()
     },
     body: JSON.stringify(data)
   })

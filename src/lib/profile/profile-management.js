@@ -13,8 +13,7 @@ export const getUserProfile = async (email) => {
 export const updateUserProfile = async (profileData) => {
     const res = await fetch(`${baseUrl}/api/users/update-profile`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json',
-        ... await authHeader()
+        headers: { 'Content-Type': 'application/json'
          },
         body: JSON.stringify(profileData)
     });
