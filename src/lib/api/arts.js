@@ -7,7 +7,6 @@ export const getAllArts = async()=>{
 }
 
 export const getArtId = async(id)=>{
-    console.log(id)
      return serverFetch(`/api/all-arts/${id}`)
 }
 

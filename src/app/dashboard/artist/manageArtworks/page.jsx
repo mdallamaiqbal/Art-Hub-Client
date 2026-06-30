@@ -67,7 +67,6 @@ const ManageArtworksPage = async ({ searchParams }) => {
                                             </td>
 
                                             <td className="p-4 text-center">
-                                                {/* 💡 ২. এখানে artworkId বদলে artId দিন, কারণ বাটনের ভেতরে artId ডিক্লেয়ার করা */}
                                                 <DeleteArtButton
                                                     artId={art._id || art.id}
                                                     title={art.title}
